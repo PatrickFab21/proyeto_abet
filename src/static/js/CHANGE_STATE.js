@@ -34,7 +34,3 @@ function ellipsis_box(elemento, max_chars) {
 $(function() {
     ellipsis_box(".limitado-info", 240);
 });
-
-$(function() {
-    ellipsis_box(".limitado-link", 60);
-});

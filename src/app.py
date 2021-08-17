@@ -1,3 +1,4 @@
+import re
 import emailSender
 from flask import Flask, render_template, url_for, session, request, redirect
 from flask_mysqldb import MySQL
@@ -13,6 +14,12 @@ app.config['MYSQL_USER'] = 'bfe7f8e0a032e0'
 app.config['MYSQL_PASSWORD'] = '2c08931d'
 app.config['MYSQL_HOST'] = 'us-cdbr-east-04.cleardb.com'
 app.config['MYSQL_DB'] = 'heroku_468b22cd0d65a8e'
+
+# app.config['MYSQL_USER'] = 'root'
+# app.config['MYSQL_PASSWORD'] = ''
+# app.config['MYSQL_HOST'] = 'localhost'
+# app.config['MYSQL_DB'] = 'iot'
+
 mysql = MySQL(app)
 
 
@@ -42,13 +49,9 @@ def index():
     
     cursor = mysql.connection.cursor()
     cursor.execute(""" SELECT * FROM info_iot """)
-    data = cursor.fetchall()
+    dataINFO = cursor.fetchall()
     cursor.close()
-
-
-    print("Esta es la data csmr",data)
-
-    return render_template('index.html')
+    return render_template('index.html', dataINFO = dataINFO, count = len(dataINFO))
  
 @app.route('/about')
 def about():
@@ -138,54 +141,61 @@ def welcome(nombre, email):
 
         cursor = mysql.connection.cursor()
         cursor.execute(""" SELECT * FROM usuarios_iot WHERE email = '{0}' """.format(email))
-        dataUSER = cursor.fetchall() #Crear tupla de informacion
-        cursor.close()
-
-
-        cursor = mysql.connection.cursor()
+        dataUSER = cursor.fetchall() 
+            
         cursor.execute(""" SELECT * FROM info_iot """)
         dataINFO = cursor.fetchall()
         cursor.close()
 
+        if request.method == 'POST':
 
+            if request.form['CHANGE'] == 'ADD':
+
+                titulo = request.form['TITTLE']
+                informacion = request.form['INFO']
+                linkMasInfo = request.form['LINKaux']
+
+
+                cursor = mysql.connection.cursor()
+                cursor.execute(""" INSERT INTO info_iot (titulo, Informacion, linkMasInfo) 
+                VALUE ('{0}','{1}','{2}' ) """.format(titulo, informacion, str(linkMasInfo )))
+                mysql.connection.commit()
+                cursor.close()
+            
+            if request.form['CHANGE'] == "DELETE":
+
+                positionFORM = request.form["POSITION"]
+
+                cursor = mysql.connection.cursor()
+                cursor.execute(""" DELETE FROM info_iot WHERE id = '{0}' """.format(positionFORM))
+                mysql.connection.commit()
+                cursor.close()
+
+            if request.form['CHANGE'] == "UPDATE":
+
+                positionFORM = request.form["POSITION"]
+
+                titulo = request.form['TITTLE']
+                informacion = request.form['INFO']
+                linkMasInfo = request.form['LINKaux']
+
+                cursor = mysql.connection.cursor()
+                cursor.execute(""" UPDATE info_iot SET titulo = '{0}', 
+                Informacion = '{1}', linkMasInfo = '{2}' WHERE id = '{3}' """.format(titulo, informacion, linkMasInfo, positionFORM))
+                mysql.connection.commit()
+                cursor.close()
+
+            return render_template('welcome.html', dataUSER = dataUSER, dataINFO = dataINFO, count = len(dataINFO))
+
+        
+
+        
         return render_template('welcome.html', dataUSER = dataUSER, dataINFO = dataINFO, count = len(dataINFO))
     else:
         return 'error'
-
-# def welcomeADDINFO(nombre, email):
-
-#     if 'username' in session:
-
-#         cursor = mysql.connection.cursor()
-#         cursor.execute(""" SELECT * FROM usuarios_iot WHERE email = '{0}' """.format(email))
-#         dataUSER = cursor.fetchall() #Crear tupla de informacion
-#         cursor.close()
-
-
-#         cursor = mysql.connection.cursor()
-#         cursor.execute(""" SELECT * FROM info_iot """)
-#         dataINFO = cursor.fetchall()
-#         cursor.close()
-
-#         titulo = request.form["TITTLE"]
-#         informacion = request.form["INFO"]
-#         linkMasInfo = request.form["LINKaux"]
-
-
-#         cursor = mysql.connection.cursor()
-#         cursor.execute(""" INSERT INTO info_iot (titulo, Informacion, linkMasInfo) 
-#         VALUE ('{0}','{1}','{2}' ) """.format(titulo, informacion, str(linkMasInfo )))
-#         mysql.connection.commit()
-#         cursor.close()
-
-#         return render_template('welcome.html', dataUSER = dataUSER, dataINFO = dataINFO, count = len(dataINFO))
-#     else:
-#         return 'error'
-#{{ url_for('welcomeADDINFO', nombre = nombre, email = email ) }}
-
 
 
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, port = 8000)

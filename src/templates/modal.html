@@ -1,0 +1,70 @@
+{% macro modal(p_titulo, p_linkAUX, p_info, p_targetMODAL, p_id) %}
+
+<!-- Modal EDIT -->
+<div class="modal fade" id="{{ p_targetMODAL }}" tabindex="-1" role="dialog" aria-labelledby="tituloVentana" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <form action="" method="POST">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:  #17a2b8; color: white;">
+                    <h5 id="tituloVentana">Actualiza la Información</h5>
+                    <button class="close" data-dismiss="modal" arial-label=" cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert aler-success">
+
+                        <div class="card">
+                            <div class="row">
+
+                                <div class="form-group col-6">
+                                    <label for="exampleInputEmail1" style="padding-bottom: 0; margin-bottom: 0;">TÍTULO</label>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-heading"></i></span>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" name="TITTLE" value="{{ p_titulo }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-6">
+                                    <label for="exampleInputEmail1" style="padding-bottom: 0; margin-bottom: 0;">LINK AUXILIAR</label>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-link"></i></span>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" name="LINKaux" value="{{ p_linkAUX }}">
+                                    </div>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label for="exampleInputEmail1" style="padding-bottom: 0; margin-bottom: 0;">INFORMACIÓN COMPLETA</label>
+
+                                    <textarea id="summernote{{p_id}}" name="INFO">
+                                                {{ p_info|safe }}
+                                            </textarea>
+                                    <script>
+                                        $('#summernote{{p_id}}').summernote({
+
+                                            tabsize: 2,
+                                            height: 100
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" type="button" data-dismiss="modal">
+                                Cerrar
+                            </button>
+
+                    <form action="" method="post">
+                        <input type="hidden" name="POSITION" value="{{ p_id }}">
+                        <button class="btn btn-success" type="submit" name="CHANGE" value="UPDATE"><i class="fas fa-pen-alt"></i>
+                                    ACTUALIZAR
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endmacro %}

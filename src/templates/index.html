@@ -140,6 +140,45 @@
     </div>
 
 
+    {% for i in range(0, count) %}
+    <div class="latest-products">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section-heading">
+                        <h2>{{ dataINFO[i][1] }}</h2>
+                        <a href="{{ dataINFO[i][3] }}">{{ dataINFO[i][1] }} <i class="fa fa-angle-right"></i></a>
+                    </div>
+
+                </div>
+
+                <div class="col-md-12">
+                    <div class="product-item">
+                        <a href="#"><img src="assets/images/product_03.jpg" alt=""></a>
+                        <div class="down-content">
+                            <div class="text-justify">
+                                {{dataINFO[i][2]|safe}}
+                            </div>
+                        </div>
+                    </div>
+                    <script src="https://gist.github.com/user0able/75ce95265a17905f10b3d5cf95cff16f.js"></script>
+                    <script src="https://gist.github.com/PatrickFab21/b83d3647f0dd4467942a1f430e1a5a72.js"></script>
+
+                    <div class="content">
+
+                        <!-- <iframe src="https://docs.google.com/viewer?srcid=1UHdH9V1vtIabk_Jl3sgrS_hmw_Ze-g9M&pid=explorer&efh=false&a=v&chrome=false&embedded=true" width="100%" height="680px"></iframe>
+
+                        <iframe src="https://drive.google.com/embeddedfolderview?id=12QwbbxsfbpyMXmeINAPUzv3vzdJzhbpC#list" style="width:100%; height:300px; border:1;"></iframe> -->
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    {% endfor %}
     <footer>
         <div class="container">
             <div class="row">
